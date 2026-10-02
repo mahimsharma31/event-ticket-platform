@@ -1,6 +1,6 @@
 package com.example.Ticket.Booking.App.filter;
 
-import com.example.Ticket.Booking.App.domian.User;
+import com.example.Ticket.Booking.App.domian.entities.User;
 import com.example.Ticket.Booking.App.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.UUID;
 
 @Component

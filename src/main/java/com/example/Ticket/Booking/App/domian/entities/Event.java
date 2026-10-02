@@ -1,4 +1,4 @@
-package com.example.Ticket.Booking.App.domian;
+package com.example.Ticket.Booking.App.domian.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
