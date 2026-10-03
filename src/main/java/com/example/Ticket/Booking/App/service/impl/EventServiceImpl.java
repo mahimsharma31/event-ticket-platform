@@ -1,0 +1,57 @@
+package com.example.Ticket.Booking.App.service.impl;
+
+import com.example.Ticket.Booking.App.domian.CreateEventRequest;
+import com.example.Ticket.Booking.App.domian.entities.Event;
+import com.example.Ticket.Booking.App.domian.entities.TicketType;
+import com.example.Ticket.Booking.App.domian.entities.User;
+
+
+import com.example.Ticket.Booking.App.exception.UserNotFoundException;
+import com.example.Ticket.Booking.App.repository.EventRepository;
+import com.example.Ticket.Booking.App.repository.UserRepository;
+import com.example.Ticket.Booking.App.service.EventService;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class EventServiceImpl implements EventService {
+
+    private final UserRepository userRepository;
+    private final EventRepository eventRepository
+
+    @Override
+    public Event createEvent(UUID organizerID, CreateEventRequest event) {
+        User organizer = userRepository.findById(organizerID).orElseThrow(() -> new UserNotFoundException(
+                String.format("User with ID '%s' not found", organizerID)
+        ));
+
+        List<TicketType> ticketTypesToCreate = event.getTicketTypes().stream().map(
+                ticketType -> {
+                    TicketType ticketTypeToCreate = new TicketType();
+                    ticketTypeToCreate.setName(ticketType.getName());
+                    ticketTypeToCreate.setPrice(ticketType.getPrice());
+                    ticketTypeToCreate.setDescription(ticketType.getDescription());
+                    ticketTypeToCreate.setTotalAvailable(ticketType.getTotalAvailable());
+                    return ticketTypeToCreate;
+                }
+        ).toList();
+
+        Event eventToCreate = new Event();
+        eventToCreate.setName(event.getName());
+        eventToCreate.setStart(event.getStart());
+        eventToCreate.setEnd(event.getEnd());
+        eventToCreate.setVenue(event.getVenue());
+        eventToCreate.setSaleStart(event.getSalesStart());
+        eventToCreate.setSaleEnd(event.getSalesStart());
+        eventToCreate.setStatus(event.getStatus());
+        eventToCreate.setOrganizer(organizer);
+        eventToCreate.setTicketTypes(ticketTypesToCreate);
+
+        return eventRepository.save(eventToCreate);
+    }
+}
