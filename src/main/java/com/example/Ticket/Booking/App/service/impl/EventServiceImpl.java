@@ -22,7 +22,7 @@ import java.util.UUID;
 public class EventServiceImpl implements EventService {
 
     private final UserRepository userRepository;
-    private final EventRepository eventRepository
+    private final EventRepository eventRepository;
 
     @Override
     public Event createEvent(UUID organizerID, CreateEventRequest event) {
