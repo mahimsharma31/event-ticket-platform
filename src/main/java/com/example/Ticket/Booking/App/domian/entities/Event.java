@@ -28,10 +28,10 @@ public class Event {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "start")
+    @Column(name = "event_start")
     private LocalDateTime start;
 
-    @Column(name = "end")
+    @Column(name = "event_end")
     private LocalDateTime end;
 
     @Column(name = "venue", nullable = false)
@@ -65,7 +65,7 @@ public class Event {
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Override

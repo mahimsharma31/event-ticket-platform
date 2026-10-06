@@ -11,6 +11,7 @@ import com.example.Ticket.Booking.App.domian.entities.TicketType;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+
 @Mapper(componentModel = "Spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface EventMapper {
 
