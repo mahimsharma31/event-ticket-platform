@@ -3,11 +3,13 @@ package com.example.Ticket.Booking.App.controller;
 import com.example.Ticket.Booking.App.domian.CreateEventRequest;
 import com.example.Ticket.Booking.App.domian.dtos.CreateEventRequestDto;
 import com.example.Ticket.Booking.App.domian.dtos.CreateEventResponseDto;
+import com.example.Ticket.Booking.App.domian.dtos.GetEventDetailResponseDto;
 import com.example.Ticket.Booking.App.domian.dtos.ListEventResponseDto;
 import com.example.Ticket.Booking.App.domian.entities.Event;
 import com.example.Ticket.Booking.App.mapper.EventMapper;
 import com.example.Ticket.Booking.App.repository.EventRepository;
 import com.example.Ticket.Booking.App.service.impl.EventServiceImpl;
+import com.sun.java.accessibility.util.GUIInitializedListener;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,7 +50,20 @@ public class EventController {
         UUID userId = parseUserId(jwt);
 
         Page<Event> events = eventService.listEventForOrganizer(userId, pageable);
-        return ResponseEntity.ok(events.map(eventMapper::toListEventResponseDto));
+        return ResponseEntity.ok(
+                events.map(eventMapper::toListEventResponseDto));
+    }
+
+    @GetMapping(path = "/{eventID}")
+    private ResponseEntity<GetEventDetailResponseDto> getEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventID
+            ){
+        UUID userId = parseUserId(jwt);
+        return eventService.getEventForOrganizer(userId,eventID)
+                .map(eventMapper::toGetEventDetailResponseDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     private UUID parseUserId(Jwt jwt){

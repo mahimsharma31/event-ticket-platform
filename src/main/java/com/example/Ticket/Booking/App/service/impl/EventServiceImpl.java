@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -63,5 +64,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public Page<Event> listEventForOrganizer(UUID organizerID, Pageable pageable) {
         return eventRepository.findByOrganizerId(organizerID, pageable);
+    }
+
+    @Override
+    public Optional<Event> getEventForOrganizer(UUID organizerID, UUID id) {
+        return eventRepository.findByIdAndOrganizerId(id, organizerID);
     }
 }
