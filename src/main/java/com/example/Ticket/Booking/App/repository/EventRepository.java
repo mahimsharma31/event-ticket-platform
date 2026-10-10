@@ -1,6 +1,7 @@
 package com.example.Ticket.Booking.App.repository;
 
 import com.example.Ticket.Booking.App.domian.entities.Event;
+import com.example.Ticket.Booking.App.domian.entities.EventStatusEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,4 +14,5 @@ import java.util.UUID;
 public interface EventRepository extends JpaRepository<Event, UUID> {
     Page<Event> findByOrganizerId(UUID organizerId, Pageable pageable);
     Optional<Event> findByIdAndOrganizerId(UUID id, UUID organizer);
+
 }

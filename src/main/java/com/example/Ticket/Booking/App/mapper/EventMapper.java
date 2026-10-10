@@ -2,6 +2,8 @@ package com.example.Ticket.Booking.App.mapper;
 
 import com.example.Ticket.Booking.App.domian.CreateEventRequest;
 import com.example.Ticket.Booking.App.domian.CreateTicketTypeRequest;
+import com.example.Ticket.Booking.App.domian.UpdateEventRequest;
+import com.example.Ticket.Booking.App.domian.UpdateTicketTypeRequest;
 import com.example.Ticket.Booking.App.domian.dtos.*;
 import com.example.Ticket.Booking.App.domian.entities.Event;
 import com.example.Ticket.Booking.App.domian.entities.TicketType;
@@ -27,5 +29,15 @@ public interface EventMapper {
     GetEventDetailTicketTypeResponseDto toGetEventDetailTicketTypeResponseDto(TicketType ticketType);
 
     GetEventDetailResponseDto toGetEventDetailResponseDto(Event event);
+
+    UpdateTicketTypeRequest fromDto(UpdateTicketTypeRequestDto dto);
+
+    UpdateEventRequest fromDto(UpdateEventRequestDto dto);
+
+    UpdateTicketTypeResponseDto toUpdateTicketTypeResponseDto(TicketType ticketType);
+
+    UpdateEventResponseDto toUpdateEventResponseDto(Event event);
+
+    ListPublishedEventRequestDto toListPublishedEventRequestDto(Event event);
 
 }

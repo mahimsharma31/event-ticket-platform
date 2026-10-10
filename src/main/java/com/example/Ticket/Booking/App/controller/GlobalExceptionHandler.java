@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleEventUpdateException(EventUpdateException ex){
         log.error("Caught TicketTypeNotFoundException", ex);
         ErrorDto errorDto = new ErrorDto();
-        errorDto.setError("Ticket Type not found");
+        errorDto.setError("Unable to update event");
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 

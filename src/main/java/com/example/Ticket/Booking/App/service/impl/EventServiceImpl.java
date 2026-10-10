@@ -4,6 +4,7 @@ import com.example.Ticket.Booking.App.domian.CreateEventRequest;
 import com.example.Ticket.Booking.App.domian.UpdateEventRequest;
 import com.example.Ticket.Booking.App.domian.UpdateTicketTypeRequest;
 import com.example.Ticket.Booking.App.domian.entities.Event;
+import com.example.Ticket.Booking.App.domian.entities.EventStatusEnum;
 import com.example.Ticket.Booking.App.domian.entities.TicketType;
 import com.example.Ticket.Booking.App.domian.entities.User;
 
@@ -139,6 +140,13 @@ public class EventServiceImpl implements EventService {
         }
         return eventRepository.save(existingEvent);
     }
+
+    @Override
+    public void deleteEventForOrganizer(UUID organizerId, UUID id) {
+        getEventForOrganizer(organizerId,id).ifPresent(eventRepository::delete);
+    }
+
+
 
 
 }

@@ -1,10 +1,8 @@
 package com.example.Ticket.Booking.App.controller;
 
 import com.example.Ticket.Booking.App.domian.CreateEventRequest;
-import com.example.Ticket.Booking.App.domian.dtos.CreateEventRequestDto;
-import com.example.Ticket.Booking.App.domian.dtos.CreateEventResponseDto;
-import com.example.Ticket.Booking.App.domian.dtos.GetEventDetailResponseDto;
-import com.example.Ticket.Booking.App.domian.dtos.ListEventResponseDto;
+import com.example.Ticket.Booking.App.domian.UpdateEventRequest;
+import com.example.Ticket.Booking.App.domian.dtos.*;
 import com.example.Ticket.Booking.App.domian.entities.Event;
 import com.example.Ticket.Booking.App.mapper.EventMapper;
 import com.example.Ticket.Booking.App.repository.EventRepository;
@@ -43,6 +41,31 @@ public class EventController {
         CreateEventResponseDto createEventResponseDto = eventMapper.toDto(createdEvent);
         return new ResponseEntity<>(createEventResponseDto, HttpStatus.CREATED);
     }
+
+    @PutMapping(path = "/{eventId}")
+    public ResponseEntity<UpdateEventResponseDto> UpdateEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId,
+            @Valid @RequestBody UpdateEventRequestDto updateEventRequestDto){
+
+        UpdateEventRequest updateEventRequest = eventMapper.fromDto(updateEventRequestDto);
+        UUID userId = parseUserId(jwt);
+
+        Event updatedEvent = eventService.updateEventForOrganizer(userId, eventId, updateEventRequest);
+        UpdateEventResponseDto updateEventResponseDto = eventMapper.toUpdateEventResponseDto(updatedEvent);
+        return ResponseEntity.ok(updateEventResponseDto);
+    }
+
+    @DeleteMapping(path = "/{eventId}")
+    public ResponseEntity<Void> deleteEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId
+    ){
+        UUID userId = parseUserId(jwt);
+        eventService.deleteEventForOrganizer(userId,eventId);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     private ResponseEntity<Page<ListEventResponseDto>> listEvent(
             @AuthenticationPrincipal Jwt jwt,
