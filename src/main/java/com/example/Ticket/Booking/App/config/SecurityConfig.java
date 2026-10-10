@@ -2,6 +2,7 @@ package com.example.Ticket.Booking.App.config;
 
 import com.example.Ticket.Booking.App.filter.userProvisioningFilter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,7 +18,10 @@ public class SecurityConfig {
 
         http.
                 authorizeHttpRequests(authorize ->
-                        authorize.anyRequest().authenticated())
+
+                        authorize
+                                .requestMatchers(HttpMethod.GET, "/api/v1/published-events").permitAll()
+                                .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

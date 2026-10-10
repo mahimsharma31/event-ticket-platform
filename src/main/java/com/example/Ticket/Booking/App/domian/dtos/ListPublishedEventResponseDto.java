@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListPublishedEventRequestDto {
+public class ListPublishedEventResponseDto {
     private UUID id;
     private String name;
     private LocalDateTime start;
