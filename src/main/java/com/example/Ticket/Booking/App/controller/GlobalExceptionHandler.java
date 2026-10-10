@@ -1,10 +1,7 @@
 package com.example.Ticket.Booking.App.controller;
 
 import com.example.Ticket.Booking.App.domian.dtos.ErrorDto;
-import com.example.Ticket.Booking.App.exception.EventNotFoundException;
-import com.example.Ticket.Booking.App.exception.EventUpdateException;
-import com.example.Ticket.Booking.App.exception.TicketTypeNotFoundException;
-import com.example.Ticket.Booking.App.exception.UserNotFoundException;
+import com.example.Ticket.Booking.App.exception.*;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +17,14 @@ import java.util.List;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(QrCodeGenerationException.class)
+    public ResponseEntity<ErrorDto> handleQrCodeGenerationException(QrCodeGenerationException ex){
+        log.error("Caught QrCodeGenerationException", ex);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setError("Unable to generate Qr code");
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @ExceptionHandler(EventUpdateException.class)
     public ResponseEntity<ErrorDto> handleEventUpdateException(EventUpdateException ex){
