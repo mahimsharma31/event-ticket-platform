@@ -4,6 +4,7 @@ import com.example.Ticket.Booking.App.domian.entities.QrCode;
 import com.example.Ticket.Booking.App.domian.entities.QrCodeStatusEnum;
 import com.example.Ticket.Booking.App.domian.entities.Ticket;
 import com.example.Ticket.Booking.App.exception.QrCodeGenerationException;
+import com.example.Ticket.Booking.App.exception.QrCodeNotFoundException;
 import com.example.Ticket.Booking.App.repository.QrCodeRepository;
 import com.example.Ticket.Booking.App.service.QrCodeService;
 import com.google.zxing.BarcodeFormat;
@@ -12,6 +13,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -19,10 +21,12 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class QrCodeServiceImpl implements QrCodeService {
 
     private static final int QR_HEIGHT = 300;
@@ -49,12 +53,25 @@ public class QrCodeServiceImpl implements QrCodeService {
         }
     }
 
+    @Override
+    public byte[] getQrcodeImageForUserAndTicket(UUID userId, UUID ticketId) {
+        QrCode qrCode = qrCodeRepository.findByTicketIdAndTicketPurchaserId(ticketId, userId)
+                .orElseThrow(QrCodeNotFoundException::new);
+
+        try{
+            return Base64.getDecoder().decode(qrCode.getValue());
+        }catch (IllegalArgumentException ex){
+            log.error("Invalid base 64 QrCode  for ticket Id: {}",ticketId,ex);
+            throw new QrCodeNotFoundException();
+        }
+    }
+
     private String generateQrCodeImage(UUID uniqueId) throws WriterException, IOException {
         BitMatrix bitMatrix = qrCodeWriter.encode(
                 uniqueId.toString(),
                 BarcodeFormat.QR_CODE,
-                QR_HEIGHT,
-                QR_WIDTH
+                QR_WIDTH,
+                QR_HEIGHT
         );
         BufferedImage qrCodeImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
 
